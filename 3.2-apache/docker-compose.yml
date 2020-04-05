@@ -1,0 +1,22 @@
+version: '2'
+
+volumes:
+  phpbb-sqlite: {}
+  phpbb-files: {}
+  phpbb-store: {}
+  phpbb-avatars: {}
+
+services:
+  phpbb:
+    container_name: phpbb-3.2.1
+    image: c4pr1c3/phpbb3:3.2.1
+    ports:
+      - '127.0.0.1:8000:80'
+    volumes:
+      - 'phpbb-sqlite:/phpbb/sqlite'
+      - 'phpbb-files:/phpbb/www/files'
+      - 'phpbb-store:/phpbb/www/store'
+      - 'phpbb-avatars:/phpbb/www/images/avatars/upload'
+    environment:
+      #PHPBB_INSTALL: 'true'
+      PHPBB_DB_AUTOMIGRATE: 'true'

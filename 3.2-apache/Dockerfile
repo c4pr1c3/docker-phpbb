@@ -1,6 +1,9 @@
-FROM alpine:3.9
+FROM alpine:3.7
 
-MAINTAINER Dmitry Seleznyov <selim013@gmail.com>
+MAINTAINER c4pr1c3 <c4pr1c3@gmail.com>
+
+# use domestic mirror instead of official repo
+#RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
 
 RUN apk add --no-cache curl \
     imagemagick \
@@ -23,14 +26,20 @@ RUN apk add --no-cache curl \
     php7-xml \
     php7-zlib \
     php7-zip \
+    php7-phar \
     su-exec
 
 ### phpBB
-ENV PHPBB_VERSION 3.2.5
-ENV PHPBB_SHA256 '4c50f8657a6f19e73468bac563c1804e112c54c1f700d24803cacc22d080d08b'
+## CVE-2018-19274
+ENV PHPBB_VERSION 3.2.1
+ENV PHPBB_SHA256 'ea1c7e08aa3466aa325deca5d8998a24d103bfecf23826ce61fe5390b6a09f71'
 
 WORKDIR /tmp
 
+# use local src tar
+# COPY phpBB-3.2.1.tar.bz2 /tmp/phpbb.tar.bz2
+
+# RUN echo "${PHPBB_SHA256}  phpbb.tar.bz2" | sha256sum -c - \
 RUN curl -SL https://www.phpbb.com/files/release/phpBB-${PHPBB_VERSION}.tar.bz2 -o phpbb.tar.bz2 \
     && echo "${PHPBB_SHA256}  phpbb.tar.bz2" | sha256sum -c - \
     && tar -xjf phpbb.tar.bz2 \
